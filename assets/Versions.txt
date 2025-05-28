@@ -1,0 +1,903 @@
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 5, // number of tabs
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Days of the Week'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+                Tab(text: 'Friday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              // content of each tab
+              _buildTimeline(),
+              _buildTimeline(),
+              _buildTimeline(),
+              _buildTimeline(),
+              _buildTimeline(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline() {
+    return ListView.builder(
+      itemCount: 24,
+      itemBuilder: (BuildContext context, int index) {
+        String hour = (index < 10) ? '0$index' : '$index'; // format hours as "00" to "23"
+        return ListTile(
+          title: Text('$hour:00'),
+          subtitle: Text('Activity at this time'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  }
+}
+
+
+
+
+
+
+
+
+########################################################################################################################
+
+
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Weekly Schedule'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+                Tab(text: 'Friday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline('M'),
+              _buildTimeline('T'),
+              _buildTimeline('W'),
+              _buildTimeline('R'),
+              _buildTimeline('F'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(String day) {
+    final data = json.decode(
+        DefaultAssetBundle.of(context).loadString('assets/schedule.json'));
+
+    final filteredData = List<Map<String, dynamic>>.from(data)
+        .where((course) => course['Course Days'].contains(day))
+        .toList();
+
+    return ListView.builder(
+      itemCount: filteredData.length,
+      itemBuilder: (BuildContext context, int index) {
+        final course = filteredData[index];
+        return ListTile(
+          title: Text('${course['Course Name']}'),
+          subtitle: Text('${course['Course Timing']}'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  }
+}
+
+
+
+########################################################################################
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Weekly Schedule'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+                Tab(text: 'Friday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline('M'),
+              _buildTimeline('T'),
+              _buildTimeline('W'),
+              _buildTimeline('R'),
+              _buildTimeline('F'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(String day) {
+    List _items = [];
+    Future<void> readJson () async {
+      final String response = await rootBundle.loadString('assets/schedule.json');
+      final data = await json.decode (response);
+      setState (() {
+        _items = data["items"];
+        print("..number of items ${_items.length}");
+      });
+    }
+    body: ElevatedButton(
+            onPressed: () {
+              readJson ();
+            },
+            child: Center (child: Text ("Load Json")));
+
+    final filteredData = List<Map<String, dynamic>>.from(data)
+        .where((course) => course['Course Days'].contains(day))
+        .toList();
+
+    return ListView.builder(
+      itemCount: filteredData.length,
+      itemBuilder: (BuildContext context, int index) {
+        final course = filteredData[index];
+        return ListTile(
+          title: Text('${course['Course Name']}'),
+          subtitle: Text('${course['Course Timing']}'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  }
+  
+  void setState(Null Function() param0) {}
+}
+
+#################################################################
+
+
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 4, // number of tabs
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Student Schedule'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              // content of each tab
+              _buildTimelineM(),
+              _buildTimelineT(),
+              _buildTimelineW(),
+              _buildTimelineR(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimelineM() {
+    return ListView.builder(
+      itemCount: 24,
+      itemBuilder: (BuildContext context, int index) {
+        String hour = (index < 10) ? '0$index' : '$index'; // format hours as "00" to "23"
+        return ListTile(
+          title: Text('$hour:00'),
+          subtitle: Text('Activity at this time'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  }
+  Widget _buildTimelineT() {
+    return ListView.builder(
+      itemCount: 24,
+      itemBuilder: (BuildContext context, int index) {
+        String hour = (index < 10) ? '0$index' : '$index'; // format hours as "00" to "23"
+        return ListTile(
+          title: Text('$hour:00'),
+          subtitle: Text('Activity at this time'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  }
+  Widget _buildTimelineW() {
+    return ListView.builder(
+      itemCount: 24,
+      itemBuilder: (BuildContext context, int index) {
+        String hour = (index < 10) ? '0$index' : '$index'; // format hours as "00" to "23"
+        return ListTile(
+          title: Text('$hour:00'),
+          subtitle: Text('Activity at this time'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  }
+  Widget _buildTimelineR() {
+    return ListView.builder(
+      itemCount: 24,
+      itemBuilder: (BuildContext context, int index) {
+        String hour = (index < 10) ? '0$index' : '$index'; // format hours as "00" to "23"
+        return ListTile(
+          title: Text('$hour:00'),
+          subtitle: Text('Activity at this time'),
+          trailing: Icon(Icons.arrow_forward_ios),
+        );
+      },
+    );
+  } 
+}
+
+#######################################################################################################
+
+
+import 'dart:js';
+
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 4, // number of tabs
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Student Schedule'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline('M'),
+              _buildTimeline('T'),
+              _buildTimeline('W'),
+              _buildTimeline('R'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(String day) {
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context).loadString('assets/schedule.json'), //Error Here
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        List<dynamic> courses = json.decode(snapshot.data.toString());
+
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        return ListView.builder(
+          itemCount: courses.length,
+          itemBuilder: (BuildContext context, int index) {
+            if (courses[index]['Course Days'].contains(day)) {
+              return ListTile(
+                title: Text(courses[index]['Course Name']),
+                subtitle: Text(courses[index]['Course Timing']),
+                onTap: () => _showCourseDetails(context, courses[index]),
+              );
+            } else {
+              return Container();
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void _showCourseDetails(BuildContext context, dynamic course) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(course['Course Name']),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Course Code: ${course['Course Code']}'),
+              Text('Instructor: ${course['Instructor']}'),
+              Text('Building: ${course['Building']}'),
+              Text('Room: ${course['Room']}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+
+#########################################################################
+
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 4, // number of tabs
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Student Schedule'),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline(context, 'M'),
+              _buildTimeline(context, 'T'),
+              _buildTimeline(context, 'W'),
+              _buildTimeline(context, 'R'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(BuildContext context, String day) {
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context).loadString('assets/schedule.json'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          var data = json.decode(snapshot.data.toString());
+          List<Course> courses = [];
+          for (var course in data) {
+            if (course['Course Days'].contains(day)) {
+              courses.add(Course.fromJson(course));
+            }
+          }
+          return ListView.builder(
+            itemCount: courses.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(courses[index].name),
+                subtitle: Text(courses[index].timing),
+                onTap: () {
+                  // Add your code here to handle the onTap event
+                },
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+class Course {
+  final String code;
+  final String name;
+  final String days;
+  final String timing;
+  final String instructor;
+  final String building;
+  final String room;
+
+  Course({
+    required this.code,
+    required this.name,
+    required this.days,
+    required this.timing,
+    required this.instructor,
+    required this.building,
+    required this.room,
+  });
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      code: json['Course Code'],
+      name: json['Course Name'],
+      days: json['Course Days'],
+      timing: json['Course Timing'],
+      instructor: json['Instructor'],
+      building: json['Building'],
+      room: json['Room'],
+    );
+  }
+}
+
+############################################################################
+
+
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DefaultTabController(
+        length: 4, // number of tabs
+        child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 105, 112, 114),
+          appBar: AppBar(
+            title: Text('Student Schedule'),
+            backgroundColor: Color.fromARGB(255, 0, 221, 165),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline(context, 'M'),
+              _buildTimeline(context, 'T'),
+              _buildTimeline(context, 'W'),
+              _buildTimeline(context, 'R'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(BuildContext context, String day) {
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context).loadString('assets/schedule.json'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          var data = json.decode(snapshot.data.toString());
+          List<Course> courses = [];
+          for (var course in data) {
+            if (course['Course Days'].contains(day)) {
+              courses.add(Course.fromJson(course));
+            }
+          }
+          courses.sort((a, b) => a.timing.compareTo(b.timing));
+          return ListView.builder(
+            itemCount: courses.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(courses[index].name),
+                subtitle: Text(courses[index].timing),
+                onTap: () {
+                  // Add your code here to handle the onTap event
+                },
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+class Course {
+  final String code;
+  final String name;
+  final String days;
+  final String timing;
+  final String instructor;
+  final String building;
+  final String room;
+
+  Course({
+    required this.code,
+    required this.name,
+    required this.days,
+    required this.timing,
+    required this.instructor,
+    required this.building,
+    required this.room,
+  });
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      code: json['Course Code'],
+      name: json['Course Name'],
+      days: json['Course Days'],
+      timing: json['Course Timing'],
+      instructor: json['Instructor'],
+      building: json['Building'],
+      room: json['Room'],
+    );
+  }
+}
+######################################################################
+
+
+
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DefaultTabController(
+        length: 4, // number of tabs
+        child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 123, 139, 147),
+          appBar: AppBar(
+            title: Text('Student Schedule'),
+            backgroundColor: Color.fromARGB(255, 8, 163, 124),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline(context, 'M'),
+              _buildTimeline(context, 'T'),
+              _buildTimeline(context, 'W'),
+              _buildTimeline(context, 'R'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(BuildContext context, String day) {
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context).loadString('assets/schedule.json'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          var data = json.decode(snapshot.data.toString());
+          List<Course> courses = [];
+          for (var course in data) {
+            if (course['Course Days'].contains(day)) {
+              courses.add(Course.fromJson(course));
+            }
+          }
+          courses.sort((a, b) => a.timing.compareTo(b.timing));
+          return ListView.builder(
+            itemCount: courses.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(courses[index].name),
+                subtitle: Text(courses[index].timing),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Course Details'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Course Code: ${courses[index].code}'),
+                            Text('Course Name: ${courses[index].name}'),
+                            Text('Course Days: ${courses[index].days}'),
+                            Text('Course Timing: ${courses[index].timing}'),
+                            Text('Instructor: ${courses[index].instructor}'),
+                            Text('Building: ${courses[index].building}'),
+                            Text('Room: ${courses[index].room}'),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },               
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+class Course {
+  final String code;
+  final String name;
+  final String days;
+  final String timing;
+  final String instructor;
+  final String building;
+  final String room;
+
+  Course({
+    required this.code,
+    required this.name,
+    required this.days,
+    required this.timing,
+    required this.instructor,
+    required this.building,
+    required this.room,
+  });
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      code: json['Course Code'],
+      name: json['Course Name'],
+      days: json['Course Days'],
+      timing: json['Course Timing'],
+      instructor: json['Instructor'],
+      building: json['Building'],
+      room: json['Room'],
+    );
+  }
+}
+
+
+###########################################
+Write a code snippet that adds a filter button that shows the selected course only and hides the rest. Skip whatever remains unchanged.
+###########################################
+
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DefaultTabController(
+        length: 4, // number of tabs
+        child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 123, 139, 147),
+          appBar: AppBar(
+            title: Text('Student Schedule'),
+            backgroundColor: Color.fromARGB(255, 8, 163, 124),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Monday'),
+                Tab(text: 'Tuesday'),
+                Tab(text: 'Wednesday'),
+                Tab(text: 'Thursday'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildTimeline(context, 'M'),
+              _buildTimeline(context, 'T'),
+              _buildTimeline(context, 'W'),
+              _buildTimeline(context, 'R'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+  Widget _buildTimeline(BuildContext context, String day) {
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context).loadString('assets/schedule.json'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          var data = json.decode(snapshot.data.toString());
+          List<Course> courses = [];
+          for (var course in data) {
+            if (course['Course Days'].contains(day)) {
+              courses.add(Course.fromJson(course));
+            }
+          }
+          courses.sort((a, b) => a.timing.compareTo(b.timing));
+          return ListView.builder(
+            itemCount: courses.length,
+            itemBuilder: (BuildContext context, int index) {
+              final controller = TextEditingController();
+              return ListTile(
+                title: Text(courses[index].name),
+                subtitle: Text(courses[index].timing),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Course Details'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Course Code: ${courses[index].code}'),
+                            Text('Course Name: ${courses[index].name}'),
+                            Text('Course Days: ${courses[index].days}'),
+                            Text('Course Timing: ${courses[index].timing}'),
+                            Text('Instructor: ${courses[index].instructor}'),
+                            Text('Building: ${courses[index].building}'),
+                            Text('Room: ${courses[index].room}'),
+                            SizedBox(height: 16.0),
+                            TextField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                hintText: 'Add Note Here',
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Save'),
+                            onPressed: () {
+                             // Do something with the entered text
+                             final notes = controller.text;
+                             
+                             // ...
+                            Navigator.of(context).pop();
+                          },
+                         ),
+                        ],
+                      );
+                    },
+                    
+                  );
+                },               
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+class Course {
+  final String code;
+  final String name;
+  final String days;
+  final String timing;
+  final String instructor;
+  final String building;
+  final String room;
+
+  Course({
+    required this.code,
+    required this.name,
+    required this.days,
+    required this.timing,
+    required this.instructor,
+    required this.building,
+    required this.room,
+  });
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      code: json['Course Code'],
+      name: json['Course Name'],
+      days: json['Course Days'],
+      timing: json['Course Timing'],
+      instructor: json['Instructor'],
+      building: json['Building'],
+      room: json['Room'],
+    );
+  }
+}
+
+

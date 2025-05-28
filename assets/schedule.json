@@ -1,0 +1,50 @@
+[
+{
+"Course Code": "CSC101",
+"Course Name": "Introduction to Computer Science",
+"Course Days": "M W",
+"Course Timing": "13:00-14:00",
+"Instructor": "Saifeddin Altawarh",
+"Building": "Building A",
+"Room": "Room 101"
+},
+{
+"Course Code": "MAT202",
+"Course Name": "Linear Algebra",
+"Course Days": "T R",
+"Course Timing": "13:00-14:30",
+"Instructor": "Jane Doe",
+"Building": "Building B",
+"Room": "Room 201"
+},
+{
+"Course Code": "ENG101",
+"Course Name": "English Composition",
+"Course Days": "M W",
+"Course Timing": "10:00-11:00",
+"Instructor": "Bob Johnson",
+"Building": "Building A",
+"Room": "Room 301"
+},
+{
+"Course Code": "BIO305",
+"Course Name": "Cell Biology",
+"Course Days": "M W",
+"Course Timing": "11:00-12:30",
+"Instructor": "Sarah Lee",
+"Building": "Building B",
+"Room": "Room 401"
+},
+{
+"Course Code": "HIS201",
+"Course Name": "History of Western Civilization",
+"Course Days": "T R",
+"Course Timing": "10:00-11:30",
+"Instructor": "Michael Wong",
+"Building": "Building A",
+"Room": "Room 501"
+}
+]
+
+
+
